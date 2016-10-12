@@ -134,7 +134,7 @@ def update_proxy_file():
         line = int(a)
         print "line=" + str(line)
     if not os.path.exists(txt):
-        print u"没有代理文件:" + txt
+        print u"没有代理文件 :" + txt
         return
     fp = open(txt)
     ls = fp.readlines()
