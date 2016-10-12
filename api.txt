@@ -1,0 +1,2 @@
+selenium: http://selenium-python.readthedocs.io/locating-elements.html  ; http://www.cnblogs.com/fnng/category/349036.html
+firefox: https://github.com/mozilla/geckodriver/releases
