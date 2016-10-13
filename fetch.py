@@ -8,7 +8,7 @@ import httplib
 
 from proxy_get import *
 
-suc = 0
+g_suc = 0
 
 def isWindowsSystem():
     return 'Windows' in platform.system()
@@ -44,6 +44,7 @@ def windows_get_url(url, proxy_ip, proxy_port):
     return obj
 
 def send_to_db(info):
+    global g_suc
     print "send_to_db:" + str(info)
     url = "http://p.chensanpang.com/input.php?req=" + str(json.dumps(info))
     print url
@@ -63,7 +64,7 @@ def send_to_db(info):
                 if (obj["data"][d]["retcode"] != 0):
                     tip = u"录入失败:" + str(obj["data"][d])
                 else:
-                    suc = suc + 1
+                    g_suc = g_suc + 1
                 print str(d) +":" + tip
             
     except Exception, e:
@@ -112,13 +113,22 @@ def multi_check(list):
         
     
 if __name__ == '__main__':
-    
-    for i in range(0, 100):
-        list = update_proxy_yun_daili(10)
-        if (not list):
-            continue
-        multi_check(list)
-        if (suc >= 10):
-            print u'成功' + str(suc) + u'个'
-            break
+    type = 'file' #url
+    if (type=='file'):
+        list = update_proxy_file()
+        if (len(list) > 0):
+            multi_check(list)
+            print u'成功' + str(g_suc) + u'个'
+            
+    if (type == 'url'):
+        for i in range(0, 100):
+            time.sleep(5)
+            list = update_proxy_yun_daili(10)
+            if (not list):
+                continue
+        
+            multi_check(list)
+            if (g_suc >= 10):
+                print u'成功' + str(g_suc) + u'个'
+                break
     

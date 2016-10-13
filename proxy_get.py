@@ -29,8 +29,10 @@ def update_proxy_yun_daili(num):
             r['ip'] = o['Ip']
             r['port'] = o['Port']
             r['de'] = o['Country'] + o['FullAddres']
-        return result
+            result.append(r)
         ok = 1
+        return result
+        
     except Exception, e:
         print e
         print u'代理获取失败'
@@ -67,6 +69,7 @@ def update_proxy_82ip(num):
             r['ip'] = o['Ip']
             r['port'] = o['Port']
             r['de'] = o['Country'] + o['FullAddres']
+            result.append(r)
         return result
         ok = 1
     except Exception, e:
@@ -124,32 +127,28 @@ def update_proxy_66ip(num):
             print u'代理获取失败'
             
 def update_proxy_file():
-    line = 0
-    tmp = "proxy.tmp"
-    txt = "proxy.data.txt"
-    if os.path.exists(tmp):
-        fp = open(tmp)
-        a = fp.readline()
-        fp.close()
-        line = int(a)
-        print "line=" + str(line)
+    txt = "proxy.db.txt"
     if not os.path.exists(txt):
         print u"没有代理文件:" + txt
-        return
+        return False
     fp = open(txt)
     ls = fp.readlines()
     fp.close()
-    if (line >= len(ls)):
-        line = 0
-    l = ls[line].strip()
-    print "l:" + l
-    obj = l.split(':')
-    print obj
-    proxy['ip'] = obj[0]
-    proxy['port'] = obj[1]
-    proxy['de'] = l
-    
-    #回写
-    fp = open(tmp, "w")
-    fp.write(str(line+1))
-    fp.close()
+    result = []
+    sp = [':', ' ', '\t', '\t\t']
+    for l in ls:
+        l = l.strip()
+        print l
+        
+        for s in sp:
+            obj = l.split(s)
+            if (len(obj) > 1):
+                break
+        if (len(obj) < 2):
+            continue
+        proxy = {}
+        proxy['ip'] = obj[0]
+        proxy['port'] = int(obj[1])
+        proxy['de'] = l
+        result.append(proxy)
+    return result
